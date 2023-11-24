@@ -6,17 +6,26 @@ import SearchPage from './shop/SearchPage';
 import ShopList from './shop/ShopList';
 import ShopUpdate from './shop/ShopUpdate';
 import LoginPage from './user/LoginPage';
+import {delCookie, getCookie} from '../common.js'
+import { useEffect } from 'react';
 
 const NaviPage = () => {
     const location = useLocation();
     const path=location.pathname;
+
 	const onLogout = (e) => {
 		e.preventDefault();
 		if(window.confirm("로그아웃 하실래요?")){
 			sessionStorage.clear();
+      delCookie("uid");
 			window.location.href="/";
 		}
 	}
+
+    useEffect(()=>{
+      const uid=getCookie("uid");
+      sessionStorage.setItem("uid", uid);
+    }, [location]);
 
     return (
     <>

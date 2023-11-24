@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import {Form, Card, Row, Col, Table, Button} from 'react-bootstrap'
-import "../../common.js"
+import {setCookie} from "../../common.js"
 
 const LoginPage = () => {
     const [checked, setChecked] = useState(false);
@@ -26,7 +26,7 @@ const LoginPage = () => {
             alert("비밀번호가 일치하지 않습니다.");
         }else{
             if(checked){
-                setCookie("uid", uid, 1);
+                setCookie("uid", uid, 7);
             }
             sessionStorage.setItem("uid", uid);
             window.location.href="/";
