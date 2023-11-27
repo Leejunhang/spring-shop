@@ -67,6 +67,7 @@ const ShopList = () => {
                         <td colSpan={2}>ID</td>
                         <td>상품명</td><td>상품가격</td>
                         <td>제조사</td><td>등록일</td>
+                        <td>조회수</td>
                         <td>삭제</td>
                     </tr>
                 </thead>
@@ -83,6 +84,7 @@ const ShopList = () => {
                             <td className='text-end'>{s.fmtprice}원</td>
                             <td>{s.maker}</td>
                             <td><div className='ellipsis'>{s.fmtdate}</div></td>
+                            <td>{s.viewcnt}</td>
                             <td><Button onClick={()=>onDelete(s)} 
                                 variant='danger btn-sm'>삭제</Button></td>
                         </tr>

@@ -78,3 +78,16 @@ a {
 .body {
   cursor: pointer;
 }
+
+.price {
+  font-size: 0.8 rem;
+}
+
+.image {
+  border: 1px solid gray;
+  border-radius: 20px;
+}
+
+.heart {
+  color: red;
+}
