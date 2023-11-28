@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import {Table, Button,Row,Col, InputGroup, Form, Alert} from 'react-bootstrap'
+import {Table, Button, Row, Col, InputGroup, Form, Alert} from 'react-bootstrap'
 import "../Pagination.css";
 import Pagination from "react-js-pagination";
 
@@ -10,6 +10,7 @@ const CartList = () => {
     const [sum, setSum] = useState(0);
     const [cnt, setCnt] = useState(0);
     const [page, setPage] = useState(1);
+    const [checkSum, setCheckSum] = useState(0);
     const size=3;
     const uid=sessionStorage.getItem("uid");
 
@@ -28,17 +29,23 @@ const CartList = () => {
 
     useEffect(()=>{
         let count=0;
-        list.forEach(c=>c.checked && count++);
+        let sum=0;
+        list.forEach(c=>{
+            if(c.checked){
+                count++;
+                sum+=c.sum;
+            }
+        });
         setCnt(count);
+        setCheckSum(sum);
     }, [list]);
 
     const onDelete = async(cid) => {
         await axios.post(`/cart/delete/${cid}`);
         getList();
     }
-
     const onChangeAll = (e) => {
-        const data=list.map(c=>c &&{...c, checked:e.target.checked});
+        const data=list.map(c=>c && {...c, checked:e.target.checked});
         setList(data);
     }
 
@@ -60,7 +67,7 @@ const CartList = () => {
         }
     }
 
-    const onChangeQnt = (e, cid) => {
+    const onChangeQnt = (e, cid)=>{
         const data=list.map(c=> c.cid===cid ? {...c, qnt:e.target.value} : c);
         setList(data);
     }
@@ -70,22 +77,23 @@ const CartList = () => {
         alert("수정완료!");
         getList();
     }
+
     return (
         <div className='my-5'>
             <h1 className='text-center mb-5'>장바구니</h1>
-            <Row>
+            <Row className='mb-2'>
                 <Col>
                     상품수:<span>{total}</span>개
                 </Col>
-                <Col className="text-end mb-2">
+                <Col className='text-end'>
                     <Button onClick={onDeleteChecked}
-                        className='btn-sm'>선택 상품삭제</Button>
+                        className='btn-sm'>선택상품삭제</Button>
                 </Col>
             </Row>
             <Table striped bordered hover>
                 <thead className='text-center'>
                     <tr>
-                        <td><input checked={list.length===cnt} 
+                        <td><input checked={list.length===cnt}
                             type="checkbox" onChange={onChangeAll}/></td>
                         <td colSpan={2}>상품명</td>
                         <td>가격</td>
@@ -94,22 +102,22 @@ const CartList = () => {
                         <td>삭제</td>
                     </tr>
                 </thead>
-                <tbody className='text-center'>
+                <tbody>
                     {list.map(c=>
                     <tr key={c.cid}>
-                        <td><input onChange={(e)=>onChangeSingle(e, c.cid)} 
-                            type="checkbox" checked={c.checked}/></td>
+                        <td><input onChange={(e)=>onChangeSingle(e, c.cid)}
+                                type="checkbox" checked={c.checked}/></td>
                         <td className='text-center'>
                             [{c.cid}]
-                                <img src={`/display?file=${c.image}`} width="50"/>
-                            </td>
-                        <td>[{c.pid}]{c.title}</td>
+                            <img src={`/display?file=${c.image}`} width="50"/>
+                        </td>
+                        <td>[{c.pid}] {c.title}</td>
                         <td className='text-end'>{c.fmtprice}원</td>
                         <td>
                             <InputGroup className='cart_input_group'>
                                 <Form.Control onChange={(e)=>{onChangeQnt(e, c.cid)}}
-                                    min={1} value={c.qnt} type="number"/>
-                                <Button onClick={()=>onUpdateQnt(c.cid, c.qnt)}
+                                    value={c.qnt} type="number"/>
+                                <Button onClick={()=>onUpdateQnt(c.cid, c.qnt)} 
                                     variant='outline-dark'>수정</Button>
                             </InputGroup>
                         </td>
@@ -120,7 +128,16 @@ const CartList = () => {
                     )}
                 </tbody>
             </Table>
-            <Alert className='text-end'>총액: {sum}원</Alert>
+            <Alert>
+                <Row>
+                    <Col>
+                        선택총액: {checkSum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                    </Col>
+                    <Col className='text-end'>
+                        전체총액: {sum}원
+                    </Col>
+                </Row>
+            </Alert>
             {total > size &&
                 <Pagination
                     activePage={page}
