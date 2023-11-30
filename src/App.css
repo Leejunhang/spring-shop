@@ -95,3 +95,7 @@ a {
 .cart_input_group { 
     max-width: 130px;  margin: 0 auto;
   }
+
+  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+    min-height: 400px; margin-bottom: 20px;
+   }

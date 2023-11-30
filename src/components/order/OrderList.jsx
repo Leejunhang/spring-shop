@@ -40,13 +40,14 @@ const OrderList = () => {
                 </thead>
                 <tbody>
                 {list.map(p=>
-                <tr key={p.oid}>
+                <tr className="text-center" key ={p.oid}>
                     <td>{p.oid}</td>
                     <td>{p.uname} ({p.uid})</td>
                     <td>{p.fmtdate}</td>
                     <td>{p.address1} {p.address2}</td>
                     <td>{p.phone}</td>
                     <td className='text-end'>{p.fmtsum}원</td>
+                    <td>{p.str_status}</td>
                     <td><ModalOrder p={p}/></td>
                 </tr>
                 )}
